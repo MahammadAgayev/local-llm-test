@@ -32,6 +32,14 @@ func (t *Tensor) GetRow(row int) []float64 {
 	return t.data[startIdx:startIdx+size]
 }
 
+func (t *Tensor) DimSize(dim int) int {
+	return t.shape[dim]
+}
+
+func (t *Tensor) Shape() []int {
+	return t.shape
+}
+
 func (t *Tensor) flatten(pos []int) int {
 	// for index 0 we have multiply it with rest of the values
 	// like index[0] * shape[1..N]
