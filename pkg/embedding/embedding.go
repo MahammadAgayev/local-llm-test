@@ -7,7 +7,7 @@ import (
 )
 
 type Embdedding struct {
-	vector tensor.Tensor
+	vector *tensor.Tensor
 	vocabSize int
 	embeddingDim int
 }
@@ -17,10 +17,14 @@ func NewEmbedding(vocabSize int, embeddingDim int) *Embdedding {
 
 	arr := initArrayWithRand(size)
 	return &Embdedding{
-		vector: *tensor.NewTensor(arr, []int{ vocabSize, embeddingDim}),
+		vector: tensor.NewTensor(arr, []int{ vocabSize, embeddingDim}),
 		vocabSize: vocabSize,
 		embeddingDim: embeddingDim,
 	}
+}
+
+func (e *Embdedding) GetTensory() *tensor.Tensor {
+	return e.vector
 }
 
 func initArrayWithRand(size int) []float64 {

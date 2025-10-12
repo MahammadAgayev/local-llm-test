@@ -33,3 +33,51 @@ func Softmax(scores []float64) []float64 {
 
 	return result
 }
+
+func MatixMultiply(a *Tensor, b *Tensor) (*Tensor, error) {
+	if len(a.Shape()) != 2 {
+		return nil, errors.New("Matrix multiplication only works for 2D matrixes")
+	}
+
+	if len(b.Shape()) != 2 {
+		return nil, errors.New("Matrix multiplication only works for 2D matrixes")
+	}
+
+	if a.Shape()[1] != b.Shape()[0] {
+		return nil, errors.New("For matrix multiplicaiton columns of first matrix(a) should match row of second matrix(b)")
+	}
+
+	transposedB, err := b.Transpose2D()
+
+	if err != nil {
+		return nil, err
+	}
+
+	newRow := a.Shape()[0]
+	newColumn := b.Shape()[1]
+
+	newData := make([]float64, newRow * newColumn)
+
+	newTensor := NewTensor(newData, []int{newRow, newColumn})
+
+	for row:=0; row < newRow; row++ {
+		rowMatrix := a.GetRow(row)
+
+		for column:=0; column < newColumn; column++ {
+
+			columnMatrix := transposedB.GetRow(column)
+
+			multiplied, err := DotProduct(rowMatrix, columnMatrix)
+
+			if err != nil {
+				return nil, err
+			}
+
+			newTensor.SetValue(multiplied, []int{row, column})
+		}
+	}
+
+	return newTensor, nil
+}
+
+
